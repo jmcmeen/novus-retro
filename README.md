@@ -1,2 +1,4 @@
-# novus-retro
-Python code using Open AI Gym Retro for Machine Learning and Retro Games
+# Open Ai Gym Retro and Python-Neat
+
+This code was adapted from tutorial code originally developed by Lucas Thompson. https://www.youtube.com/playlist?list=PLTWFMbPFsvz3CeozHfeuJIXWAJMkPtAdS
+
