@@ -1,13 +1,14 @@
 """
 Project: Playing Sonic the Hedgehog with Gym Retro and NEAT
 Purpose: Demonstrate Sonic in OpenAi Gym Retro environment
-Created by: John McMeen 2020
-Adapted from LucasThompson
+Created by: John McMeen
+Adapted from:
   Code: https://gitlab.com/lucasrthompson/Sonic-Bot-In-OpenAI-and-NEAT
   Video: https://www.youtube.com/playlist?list=PLTWFMbPFsvz3CeozHfeuJIXWAJMkPtAdS
-Helpful commands
-  Import Roms: python -m retro.import roms/sega_classics
+Notes:
+  You will need to import you own ROMs: python -m retro.import roms/sega_classics
 """
+
 
 import retro  # pip install gym-retro
 
