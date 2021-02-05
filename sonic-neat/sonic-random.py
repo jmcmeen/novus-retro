@@ -9,7 +9,7 @@ Notes:
   You will need to import you own ROMs: python -m retro.import roms/sega_classics
 """
 
-
+# import dependencies again
 import retro  # pip install gym-retro
 
 # create a gym retro environment
