@@ -133,6 +133,10 @@ dmypy.json
 /airstriker/
 /roms/sega_classics/
 
+# output files
+.bk2
+.pkl
+
 # PyCharm
 .idea
 /sonic-neat/output/
