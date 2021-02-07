@@ -45,10 +45,10 @@ def eval_genomes(genomes, config):
         counter = 0
 
         # optionally create another window for the "neural network's vision"
-        cv2.namedWindow("main", cv2.WINDOW_NORMAL)
+        # cv2.namedWindow("main", cv2.WINDOW_NORMAL)
 
-        done = False
-        while not done:
+        finished = False
+        while not finished:
             # render the game
             environment.render()
 
@@ -59,8 +59,8 @@ def eval_genomes(genomes, config):
             observation = np.reshape(observation, (inx, iny))
 
             # optional update "neural network's vision"
-            cv2.imshow('main', observation)
-            cv2.waitKey(1)
+            # cv2.imshow('main', observation)
+            # cv2.waitKey(1)
 
             # create a single array from 2d pixel data
             img_array = np.ndarray.flatten(observation)
@@ -91,11 +91,11 @@ def eval_genomes(genomes, config):
                 counter += 1
 
             if done or counter == 250:
-                done = True
-                print(genome_id, fitness)
+                finished = True
+                print(genome_id, current_max_fitness)
 
-            # set the fitness for this genome
-            genome.fitness = fitness
+        # set the fitness for this genome
+        genome.fitness = current_max_fitness
 
 
 # NEAT configuration, all defaults except a config file is provided
@@ -111,9 +111,11 @@ stats = neat.StatisticsReporter()
 population.add_reporter(stats)
 population.add_reporter(neat.Checkpointer(10))
 
-# the winning network
-winner = population.run(eval_genomes)
+# the winning network, run for x generations
+winner = population.run(eval_genomes, 5)
 
 # save the winning network to a binary file to reload later
 with open('winner.pkl', 'wb') as output:
     pickle.dump(winner, output, 1)
+
+exit()
