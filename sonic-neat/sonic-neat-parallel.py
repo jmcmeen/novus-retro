@@ -1,5 +1,5 @@
 """
-Project: Playing Sonic the Hedgehog with Gym Retro and NEAT
+Project: Playing Sonic the Hedgehog with Gym Retro and NEAT threaded
 Purpose: Evolve a neural network to play Sonic
 Created by: NovusRetro
 Adapted from LucasThompson
@@ -74,7 +74,6 @@ def eval_genome(genome, config):
         fitness += reward
 
         # give it 250 steps without improvement to improve fitness or restart
-        # TODO this code does not seems to work in parallel
         if fitness > current_max_fitness:
             current_max_fitness = fitness
             counter = 0

@@ -1,5 +1,5 @@
 """
-Project: Sonic the NEAT AI Playback Neural Network
+Project: Sonic the Hedgehog NEAT AI Playback Neural Network
 Created by: John McMeen
 Purpose: Render neural network from pkl file, and create bk2 playback file
 Adapted from LucasThompson
@@ -21,7 +21,7 @@ import neat         # pip install neat-python
 import pickle       # pip install cloudpickle
 
 # create retro environment: game, state, scenario (defines rewards)
-environment = retro.make('SonicTheHedgehog-Genesis', 'GreenHillZone.Act1', scenario="xpos", record='.')
+environment = retro.make('SonicTheHedgehog-Genesis', 'GreenHillZone.Act1', scenario='xpos', record='.')
 
 # reset environment to initial state
 observation = environment.reset()

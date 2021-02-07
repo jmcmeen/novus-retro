@@ -13,7 +13,7 @@ import neat  # pip install neat-python
 import pickle  # pip install cloudpickle
 
 # create retro environment: game, state, scenario (defines rewards)
-environment = retro.make('SonicTheHedgehog2-Genesis', scenario='xpos')
+environment = retro.make('SonicTheHedgehog2-Genesis', 'AquaticRuinZone.Act1', scenario='xpos')
 
 
 def eval_genomes(genomes, config):
@@ -29,11 +29,11 @@ def eval_genomes(genomes, config):
         inx = int(inx / 8)
         iny = int(iny / 8)
 
-        # create NEAT network alt
-        # network = neat.nn.FeedForwardNetwork.create(genome, config)
-
         # create NEAT network
         network = neat.nn.recurrent.RecurrentNetwork.create(genome, config)
+
+        # create NEAT network alt
+        # network = neat.nn.FeedForwardNetwork.create(genome, config)
 
         # set up some variables to track fitness
         current_max_fitness = 0
@@ -41,7 +41,7 @@ def eval_genomes(genomes, config):
         counter = 0
 
         # optionally create another window for the "neural network's vision"
-        cv2.namedWindow("main", cv2.WINDOW_NORMAL)
+        # cv2.namedWindow("main", cv2.WINDOW_NORMAL)
 
         done = False
         while not done:
@@ -54,8 +54,8 @@ def eval_genomes(genomes, config):
             observation = cv2.cvtColor(observation, cv2.COLOR_BGR2GRAY)
             observation = np.reshape(observation, (inx, iny))
 
-            cv2.imshow('main', observation)
-            cv2.waitKey(1)
+            #cv2.imshow('main', observation)
+            #cv2.waitKey(1)
 
             # create a single array from 2d pixel data
             img_array = np.ndarray.flatten(observation)
@@ -112,3 +112,5 @@ winner = population.run(eval_genomes)
 # save the winning network to a binary file to reload later
 with open('winner.pkl', 'wb') as output:
     pickle.dump(winner, output, 1)
+
+exit()
