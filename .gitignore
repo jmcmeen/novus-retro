@@ -140,3 +140,7 @@ dmypy.json
 # PyCharm
 .idea
 /sonic-neat/output/
+/sonic-neat/reference/
+*.mp4
+*.bk2
+*.pkl
