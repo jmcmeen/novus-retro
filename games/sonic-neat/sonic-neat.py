@@ -45,7 +45,7 @@ def eval_genomes(genomes, config):
         counter = 0
 
         # optionally create another window for the "neural network's vision"
-        cv2.namedWindow("main", cv2.WINDOW_NORMAL) #-------------------- computer vision optional
+        #cv2.namedWindow("main", cv2.WINDOW_NORMAL) #-------------------- computer vision optional
 
         finished = False
         while not finished:
@@ -70,7 +70,7 @@ def eval_genomes(genomes, config):
             actions = network.activate(observation)
 
             # take a peek at controller actions before translation
-            print(actions)
+            # print(actions)
 
             # map relu activation output to 0 or 1
             actions = np.where(np.array(actions) <= 0.0, 0.0, 1.0).tolist()
