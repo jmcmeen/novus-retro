@@ -60,8 +60,8 @@ def eval_genomes(genomes, config):
             # print(observation)
 
             # optional update "neural network's vision" or observation created from
-            cv2.imshow('main', observation)  #-------------------- computer vision optional
-            cv2.waitKey(1)  #-------------------- computer vision optional
+            #cv2.imshow('main', observation)  #-------------------- computer vision optional
+            #cv2.waitKey(1)  #-------------------- computer vision optional
 
             # create a single array from 2d pixel data
             observation = np.ndarray.flatten(observation)
