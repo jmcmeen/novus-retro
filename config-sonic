@@ -1,0 +1,22 @@
+[retro]
+game = SonicTheHedgehog-Genesis
+state = GreenHillZone.Act1
+scenario = contest
+
+[simulation]
+num_generations = 1
+# if set to 0 it will run until game state restarts
+steps_to_kill = 10
+
+
+[interactive]
+show_controls = False
+show_computer_view = False
+
+[neat]
+# options are 'feedforward', 'recurrent'
+network_type = recurrent
+
+# checkpoint to reload or 0 to start from scratch
+checkpoint = 0
+checkpoint_interval = 1

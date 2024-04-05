@@ -19,12 +19,21 @@ import cv2
 import neat
 import pickle
 import os
+import configparser
 
 # create path to current directory
 current_path = os.path.dirname(__file__)
 
+config = configparser.ConfigParser()
+config.read(os.path.join(current_path, 'config-retro'))
+
+game = config['retro']['game']
+state = config['retro']['state']
+scenario = config['retro']['scenario']
+num_generations = int(config['simulation']['num_generations'])
+
 # create retro environment: game, state, scenario (defines rewards)
-environment = retro.make('SonicTheHedgehog-Genesis', 'GreenHillZone.Act2', scenario='contest', record='.')
+environment = retro.make(game=game, state=state, record='.')
 
 # reset environment to initial state
 observation = environment.reset()

@@ -1,28 +1,33 @@
 """
 Project: Playing Sonic the Hedgehog with Gym Retro and NEAT threaded
 Purpose: Evolve a neural network to play Sonic
-Created by: NovusRetro
 Adapted from LucasThompson
   Code: https://gitlab.com/lucasrthompson/Sonic-Bot-In-OpenAI-and-NEAT
   Video: https://www.youtube.com/playlist?list=PLTWFMbPFsvz3CeozHfeuJIXWAJMkPtAdS
-Helpful commands
-  Import Roms: python -m retro.import roms/sega_classics
 """
 
-import retro  # pip install gym-retro
-import numpy as np  # pip install numpy
-import cv2  # pip install opencv-python
-import neat  # pip install neat-python
-import pickle  # pip install cloudpickle
+import retro
+import numpy as np
+import cv2
+import neat
+import pickle
 import multiprocessing
 import os
+import configparser
 
 current_path = os.path.dirname(__file__)
 
+config = configparser.ConfigParser()
+config.read(os.path.join(current_path, 'config-retro'))
+
+game = config['retro']['game']
+state = config['retro']['state']
+scenario = config['retro']['scenario']
+num_generations = int(config['simulation']['num_generations'])
 
 # eval genome takes a genome, evaluates its fitness, and returns it
 def eval_genome(genome, config):
-    environment = retro.make('SonicTheHedgehog-Genesis', 'GreenHillZone.Act3', scenario='contest')
+    environment = retro.make(game=game, state=state, scenario=scenario)
 
     # reset environment to initial state
     observation = environment.reset()
@@ -91,15 +96,9 @@ def eval_genome(genome, config):
 
 
 if __name__ == '__main__':
-    # Determine path to configuration file. This path manipulation is
-    # here so that the script will run successfully regardless of the
-    # current working directory.
-    # local_dir = os.path.dirname(__file__)
-    # config_path = os.path.join(local_dir, 'config-neat')
-    # NEAT configuration, all defaults except a config file is provided
     config = neat.Config(neat.DefaultGenome, neat.DefaultReproduction,
                          neat.DefaultSpeciesSet, neat.DefaultStagnation,
-                         'config-neat')
+                         os.path.join(current_path, 'config-feedforward'))
 
     # NEAT output
     population = neat.Population(config)
@@ -113,10 +112,10 @@ if __name__ == '__main__':
     pe = neat.ParallelEvaluator(multiprocessing.cpu_count(), eval_genome)
 
     # the winning network up to x generations
-    winner = population.run(pe.evaluate, 20)
+    winner = population.run(pe.evaluate, num_generations)
 
     # save the winning network to a binary file to reload later
-    with open('winner-act1.pkl', 'wb') as output:
+    with open(f'{game}-{state}-{scenario}-{num_generations}.pkl', 'wb') as output:
         pickle.dump(winner, output, 1)
 
     exit()
