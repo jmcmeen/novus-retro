@@ -1,0 +1,7 @@
+[retro]
+game = SonicTheHedgehog2-Genesis
+state = EmeraldHillZone.Act1
+scenario = xpos
+
+[simulation]
+num_generations = 100

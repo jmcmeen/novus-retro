@@ -1,0 +1,7 @@
+[retro]
+game = SonicTheHedgehog-Genesis
+state = GreenHillZone.Act1
+scenario = contest
+
+[simulation]
+num_generations = 100

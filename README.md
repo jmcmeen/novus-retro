@@ -2,20 +2,11 @@
 
 Code examples using various machine learning algorithms and Open AI Gym Retro. Tested with Python 3.8.7. 
 
-Libraries you will need for most examples
+# Setup
+Install dependencies from the requirements file.
 
-~~~
-pip install gym-retro
-pip install numpy
-pip install opencv-python
-pip install neat-python
-pip install cloudpickle
-~~~
+pip install -f requirements.txt
 
-You will need to import you own ROMs, Steam provides ROMs with their Sega Classics bundle.
+Import the roms, you will need to provide your own.
 
-~~~
 python -m retro.import roms/sega_classics
-~~~
-
-

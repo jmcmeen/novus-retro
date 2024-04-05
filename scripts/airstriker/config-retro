@@ -1,0 +1,7 @@
+[retro]
+game = Airstriker-Genesis
+state = Level1
+scenario = scenario
+
+[simulation]
+num_generations = 1000
