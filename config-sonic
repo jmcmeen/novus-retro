@@ -10,6 +10,7 @@ steps_to_kill = 10
 
 
 [interactive]
+# these are ignored in parallel mode
 show_controls = False
 show_computer_view = False
 

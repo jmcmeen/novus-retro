@@ -9,14 +9,13 @@ num_generations = 100
 steps_to_kill = 0
 
 [interactive]
+# these are ignored in parallel mode
 show_controls = False
 show_computer_view = False
 
-
-
 [neat]
 # options are 'feedforward', 'recurrent'
-network_type = recurrent
+network_type = feedforward
 
 # checkpoint to reload or 0 to start from scratch
 checkpoint = 0
