@@ -4,9 +4,10 @@ state = GreenHillZone.Act1
 scenario = contest
 
 [simulation]
-num_generations = 1
+num_generations = 250
 # if set to 0 it will run until game state restarts
-steps_to_kill = 10
+steps_to_kill = 250
+frames_to_skip = 5
 
 
 [interactive]
@@ -16,8 +17,8 @@ show_computer_view = False
 
 [neat]
 # options are 'feedforward', 'recurrent'
-network_type = recurrent
+network_type = feedforward
 
 # checkpoint to reload or 0 to start from scratch
 checkpoint = 0
-checkpoint_interval = 1
+checkpoint_interval = 120

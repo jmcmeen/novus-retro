@@ -34,13 +34,14 @@ show_computer_view = config.getboolean('interactive', 'show_computer_view')
 show_controls = config.getboolean('interactive', 'show_controls')
 checkpoint = config.getint('neat', 'checkpoint')
 steps_to_kill = config.getint('simulation', 'steps_to_kill')
+frames_to_skip = config.getint('simulation', 'frames_to_skip')
 checkpoint_interval = config.getint('neat', 'checkpoint_interval')
 
 # create retro environment: game, state, scenario (defines rewards)
 environment = retro.make(game=game, state=state, scenario=scenario)
 
 # create log file
-f=open("control_neat_log.csv", "w")
+f=open(f"{frames_to_skip} neat_log.csv", "w")
 
 # eval genomes takes several genomes, evaluates its fitness, and returns it
 def eval_genomes(genomes, config):
@@ -75,9 +76,11 @@ def eval_genomes(genomes, config):
             cv2.namedWindow("main", cv2.WINDOW_NORMAL)
 
         finished = False
+        current_frames = 0
         while not finished:
             # render the game
             environment.render()
+            current_frames += 1
 
             # resize and reshape the observation image
             observation = cv2.resize(observation, (inx, iny))
@@ -94,7 +97,8 @@ def eval_genomes(genomes, config):
             img_array = np.ndarray.flatten(observation)
 
             # create controller actions from input
-            actions = network.activate(img_array)
+            if(current_frames % frames_to_skip == 0 or current_frames == 1):
+                actions = network.activate(img_array)
 
             # take a peek at controller actions before translation
             if show_controls:
