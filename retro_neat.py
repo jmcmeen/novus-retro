@@ -12,36 +12,19 @@ import cv2
 import neat 
 import pickle
 import os
-import configparser
 import time
+from datetime import datetime
+from retro_config_parser import RetroConfigParser
 
-#simulation configuration file
-config_file = 'config-sonic'
+config_file = os.path.join(os.path.dirname(__file__), 'config-sonic')
 
-# create path to current directory
-current_path = os.path.dirname(__file__)
-
-# read configuration file
-config = configparser.ConfigParser()
-config.read(os.path.join(current_path, config_file))
-
-game = config['retro']['game']
-state = config['retro']['state']
-scenario = config['retro']['scenario']
-num_generations = int(config['simulation']['num_generations'])
-network_type = config['neat']['network_type']
-show_computer_view = config.getboolean('interactive', 'show_computer_view')
-show_controls = config.getboolean('interactive', 'show_controls')
-checkpoint = config.getint('neat', 'checkpoint')
-steps_to_kill = config.getint('simulation', 'steps_to_kill')
-frames_to_skip = config.getint('simulation', 'frames_to_skip')
-checkpoint_interval = config.getint('neat', 'checkpoint_interval')
+rcp = RetroConfigParser(config_file)
 
 # create retro environment: game, state, scenario (defines rewards)
-environment = retro.make(game=game, state=state, scenario=scenario)
+environment = retro.make(game=rcp.game, state=rcp.state, scenario=rcp.scenario)
 
 # create log file
-f=open(f"{frames_to_skip} neat_log.csv", "w")
+f=open(f"{datetime.now().strftime('%Y%m%d-%H%M%S')}-neat_log.csv", "w")
 
 # eval genomes takes several genomes, evaluates its fitness, and returns it
 def eval_genomes(genomes, config):
@@ -59,9 +42,9 @@ def eval_genomes(genomes, config):
         inx = int(inx / 8)
         iny = int(iny / 8)
 
-        if network_type == "recurrent":
+        if rcp.network_type == "recurrent":
             network = neat.nn.recurrent.RecurrentNetwork.create(genome, config)
-        elif network_type == "feedforward":
+        elif rcp.network_type == "feedforward":
             network = neat.nn.FeedForwardNetwork.create(genome, config)
         else:
             raise ValueError("network_type must be 'recurrent' or 'feedforward'")
@@ -70,26 +53,29 @@ def eval_genomes(genomes, config):
         fitness = 0
         current_max_fitness = 0
         counter = 0
+        current_frames = 0
 
         # optionally create another window for the "neural network's vision"
-        if show_computer_view:
+        if rcp.show_computer_view:
             cv2.namedWindow("main", cv2.WINDOW_NORMAL)
 
         finished = False
-        current_frames = 0
+
         while not finished:
             # render the game
-            environment.render()
+            if rcp.show_game_view:
+                environment.render()
+
+            # increment frame counter
             current_frames += 1
 
             # resize and reshape the observation image
             observation = cv2.resize(observation, (inx, iny))
-            # observation = cv2.cvtColor(observation, cv2.COLOR_BGR2RGB) #alt view
             observation = cv2.cvtColor(observation, cv2.COLOR_BGR2GRAY)
             observation = np.reshape(observation, (inx, iny))
 
             # optional update "neural network's vision"
-            if show_computer_view:
+            if rcp.show_computer_view:
                 cv2.imshow('main', observation)
                 cv2.waitKey(1)
 
@@ -97,18 +83,14 @@ def eval_genomes(genomes, config):
             img_array = np.ndarray.flatten(observation)
 
             # create controller actions from input
-            if(current_frames % frames_to_skip == 0 or current_frames == 1):
+            if(rcp.frames_to_skip == 0 or current_frames % rcp.frames_to_skip == 0 or current_frames == 1):
                 actions = network.activate(img_array)
 
-            # take a peek at controller actions before translation
-            if show_controls:
-                print(actions)
-
-            # map relu activation output to 0 or 1
+            # map activation output to 0 or 1
             actions = np.where(np.array(actions) <= 0.0, 0.0, 1.0).tolist()
 
             # take a peek at controller actions after translation
-            if show_controls: 
+            if rcp.show_controls: 
                 print(actions)
 
             # increment the emulator state
@@ -124,7 +106,7 @@ def eval_genomes(genomes, config):
             else:
                 counter += 1
 
-            if done or counter == steps_to_kill:
+            if done or counter == rcp.steps_to_kill:
                 finished = True
                 print(genome_id, current_max_fitness)
 
@@ -140,26 +122,27 @@ if __name__ == '__main__':
     # NEAT configuration, all defaults except a config file is provided
     config = neat.Config(neat.DefaultGenome, neat.DefaultReproduction,
                         neat.DefaultSpeciesSet, neat.DefaultStagnation,
-                        os.path.join(current_path, 'config-neat'))
+                        'config-neat')
 
     # NEAT output
     population = neat.Population(config) 
 
-    if checkpoint > 0:
+    if rcp.checkpoint > 0:
         #check if file exists
-        if os.path.isfile(f'{game}-{state}-{scenario}-{checkpoint}'):
-            population = neat.Checkpointer.restore_checkpoint(f'{game}-{state}-{scenario}-{checkpoint}')
+        if os.path.isfile(f'{rcp.game}-{rcp.state}-{rcp.scenario}-{rcp.checkpoint}'):
+            population = neat.Checkpointer.restore_checkpoint(f'{rcp.game}-{rcp.state}-{rcp.scenario}-{rcp.checkpoint}')
 
     population.add_reporter(neat.StdOutReporter(True))
     stats = neat.StatisticsReporter()
     population.add_reporter(stats)
-    population.add_reporter(neat.Checkpointer(generation_interval=checkpoint_interval, filename_prefix=f'{game}-{state}-{scenario}-'))
+    population.add_reporter(neat.Checkpointer(generation_interval=rcp.checkpoint_interval, 
+                                              filename_prefix=f'{rcp.game}-{rcp.state}-{rcp.scenario}-'))
 
     # the winning network, run for x generations
-    winner = population.run(eval_genomes, num_generations)
+    winner = population.run(eval_genomes, rcp.num_generations)
 
     # save the winning network to a binary file to reload later
-    with open(f'{game}-{state}-{scenario}-{num_generations}.pkl', 'wb') as output:
+    with open(f'{rcp.game}-{rcp.state}-{rcp.scenario}-{rcp.num_generations}.pkl', 'wb') as output:
         pickle.dump(winner, output, 1)
 
     exit()
