@@ -5,8 +5,8 @@ Code examples using various machine learning algorithms and Open AI Gym Retro. T
 # Setup
 Install dependencies from the requirements file.
 
-pip install -f requirements.txt
+`pip install -f requirements.txt`
 
 Import the roms, you will need to provide your own.
 
-python -m retro.import roms/sega_classics
+`python -m retro.import {path to your roms}`
