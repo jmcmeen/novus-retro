@@ -144,3 +144,4 @@ dmypy.json
 *.mp4
 *.bk2
 *.pkl
+*.csv
