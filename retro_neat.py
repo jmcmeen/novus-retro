@@ -6,7 +6,7 @@ Input files:
     config-neat - NEAT configuration file
 """
 
-import retro 
+import stable_retro as retro
 import numpy as np 
 import cv2 
 import neat 
@@ -70,8 +70,9 @@ def eval_genomes(genomes, config):
             current_frames += 1
 
             # resize and reshape the observation image
-            observation = cv2.resize(observation, (inx, iny))
-            observation = cv2.cvtColor(observation, cv2.COLOR_BGR2GRAY)
+            observation = cv2.resize(observation[0], (inx, iny))
+            if len(observation.shape) == 3:
+                observation = cv2.cvtColor(observation, cv2.COLOR_BGR2GRAY)
             observation = np.reshape(observation, (inx, iny))
 
             # optional update "neural network's vision"
@@ -94,7 +95,8 @@ def eval_genomes(genomes, config):
                 print(actions)
 
             # increment the emulator state
-            observation, reward, done, info = environment.step(actions)
+            print(environment.step(actions))
+            observation, reward, done, _, _ = environment.step(actions)
 
             # update fitness with reward from environment
             fitness += reward
