@@ -136,12 +136,12 @@ dmypy.json
 # output files
 .bk2
 .pkl
-
-# PyCharm
-.idea
-/sonic-neat/output/
-/sonic-neat/reference/
 *.mp4
 *.bk2
 *.pkl
 *.csv
+
+# test roms
+roms/SONIC_W.68K
+roms/Sonic_Knuckles_wSonic3.bin
+roms/SONIC2_W.68K
